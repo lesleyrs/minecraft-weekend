@@ -10,7 +10,7 @@ static void get_animation_frames(ivec2s out[BLOCK_ATLAS_FRAMES]) {
     }
 }
 
-void water_init() {
+void water_init(void) {
     struct Block water = BLOCK_DEFAULT;
     water.id = WATER;
     water.transparent = true;
