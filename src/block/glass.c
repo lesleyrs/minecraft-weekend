@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 1, 1 }};
 }
 
-void glass_init() {
+void glass_init(void) {
     struct Block glass = BLOCK_DEFAULT;
     glass.id = GLASS;
     glass.transparent = true;

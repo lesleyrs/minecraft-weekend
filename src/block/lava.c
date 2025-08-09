@@ -14,7 +14,7 @@ static Torchlight get_torchlight(struct World *world, ivec3s pos) {
     return TORCHLIGHT_OF(0xF, 0x8, 0x2, 0x7);
 }
 
-void lava_init() {
+void lava_init(void) {
     struct Block lava = BLOCK_DEFAULT;
     lava.id = LAVA;
     lava.transparent = true;

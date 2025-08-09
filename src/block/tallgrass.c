@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 2, 3 }};
 }
 
-void tallgrass_init() {
+void tallgrass_init(void) {
     struct Block tallgrass = BLOCK_DEFAULT;
     tallgrass.id = TALLGRASS;
     tallgrass.transparent = true;

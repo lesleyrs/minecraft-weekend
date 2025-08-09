@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 3, 3 }};
 }
 
-void shrub_init() {
+void shrub_init(void) {
     struct Block shrub = BLOCK_DEFAULT;
     shrub.id = SHRUB;
     shrub.transparent = true;

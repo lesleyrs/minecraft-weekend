@@ -9,7 +9,7 @@ struct VAO {
     GLuint handle;
 };
 
-struct VAO vao_create();
+struct VAO vao_create(void);
 void vao_destroy(struct VAO self);
 void vao_bind(struct VAO self);
 void vao_attr(

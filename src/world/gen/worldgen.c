@@ -7,7 +7,7 @@
 #define RADIAL2I(c, r, v)\
     (glms_vec2_norm(glms_vec2_sub(IVEC2S2V((c)), IVEC2S2V((v)))) / glms_vec2_norm(IVEC2S2V((r))))
 
-#define RADIAL3I(c, r, v)\ 
+#define RADIAL3I(c, r, v)\
     (glms_vec3_norm(glms_vec3_sub(IVEC3S2V((c)), IVEC3S2V((v)))) / glms_vec3_norm(IVEC3S2V((r))))
 
 #define WATER_LEVEL 0

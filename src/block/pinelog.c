@@ -10,7 +10,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     }
 }
 
-void pine_log_init() {
+void pine_log_init(void) {
     struct Block pine_log = BLOCK_DEFAULT;
     pine_log.id = PINE_LOG;
     pine_log.get_texture_location = get_texture_location;

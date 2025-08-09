@@ -98,7 +98,7 @@ void window_create(FWindow init, FWindow destroy, FWindow tick,  FWindow update,
     glfwSetKeyCallback(window.handle, _key_callback);
     glfwSetMouseButtonCallback(window.handle, _mouse_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
+    if (!gladLoadGLES2(glfwGetProcAddress)) {
         fprintf(stderr, "%s",  "error initializing GLAD\n");
         glfwTerminate();
         exit(1);
@@ -121,23 +121,23 @@ static void button_array_update(size_t n, struct Button *buttons) {
     }
 }
 
-static void _init() {
+static void _init(void) {
     window.init();
 }
 
-static void _destroy() {
+static void _destroy(void) {
     window.destroy();
     glfwTerminate();
 }
 
-static void _tick() {
+static void _tick(void) {
     window.ticks++;
     button_array_tick(GLFW_MOUSE_BUTTON_LAST, window.mouse.buttons);
     button_array_tick(GLFW_KEY_LAST, window.keyboard.keys);
     window.tick();
 }
 
-static void _update() {
+static void _update(void) {
     button_array_update(GLFW_MOUSE_BUTTON_LAST, window.mouse.buttons);
     button_array_update(GLFW_KEY_LAST, window.keyboard.keys);
     window.update();
@@ -146,12 +146,12 @@ static void _update() {
     window.mouse.delta = GLMS_VEC2_ZERO;
 }
 
-static void _render() {
+static void _render(void) {
     window.frames++;
     window.render();
 }
 
-void window_loop() {
+void window_loop(void) {
     _init();
 
     while (!glfwWindowShouldClose(window.handle)) {
@@ -167,7 +167,7 @@ void window_loop() {
             window.ticks = 0;
             window.last_second = now;
 
-            printf("FPS: %lld | TPS: %lld\n", window.fps, window.tps);
+            printf("FPS: %lu | TPS: %lu\n", window.fps, window.tps);
         }
 
         // tick processing
@@ -193,6 +193,6 @@ void mouse_set_grabbed(bool grabbed) {
     glfwSetInputMode(window.handle, GLFW_CURSOR, grabbed ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 }
 
-bool mouse_get_grabbed() {
+bool mouse_get_grabbed(void) {
     return glfwGetInputMode(window.handle, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
 }

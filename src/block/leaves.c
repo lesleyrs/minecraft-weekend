@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 4, 1 }};
 }
 
-void leaves_init() {
+void leaves_init(void) {
     struct Block leaves = BLOCK_DEFAULT;
     leaves.id = LEAVES;
     leaves.transparent = true;

@@ -29,7 +29,7 @@ static void get_mesh_information(
     }
 }
 
-void torch_init() {
+void torch_init(void) {
     struct Block torch = BLOCK_DEFAULT;
     torch.id = TORCH;
     torch.transparent = true;

@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 2, 2 }};
 }
 
-void cobblestone_init() {
+void cobblestone_init(void) {
     struct Block cobblestone = BLOCK_DEFAULT;
     cobblestone.id = COBBLESTONE;
     cobblestone.get_texture_location = get_texture_location;

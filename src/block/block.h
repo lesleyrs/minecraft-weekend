@@ -84,10 +84,10 @@ extern struct Block BLOCK_DEFAULT;
 extern struct Block BLOCKS[MAX_BLOCK_ID];
 
 #define _BLOCK_DECL(_name)\
-    extern void _name##_init();\
+    extern void _name##_init(void);\
     _name##_init();
 
-static inline void block_init() {
+static inline void block_init(void) {
     _BLOCK_DECL(air);
     _BLOCK_DECL(grass);
     _BLOCK_DECL(dirt);

@@ -1,6 +1,6 @@
 #include "vao.h"
 
-struct VAO vao_create() {
+struct VAO vao_create(void) {
     struct VAO self;
     glGenVertexArrays(1, &self.handle);
     return self;

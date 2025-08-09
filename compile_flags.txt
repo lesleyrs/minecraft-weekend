@@ -1,0 +1,2 @@
+-Ilib
+-D_GNU_SOURCE

@@ -11,7 +11,7 @@
 #include "c_light.h"
 
 #define _ECS_DECL_COMPONENT(_name)\
-    extern void _name##_init();\
+    extern void _name##_init(struct ECS*);\
     _name##_init(ecs);
 
 static inline void _ecs_init_internal(struct ECS *ecs) {

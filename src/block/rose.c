@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 0, 3 }};
 }
 
-void rose_init() {
+void rose_init(void) {
     struct Block rose = BLOCK_DEFAULT;
     rose.id = ROSE;
     rose.transparent = true;

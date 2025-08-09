@@ -11,7 +11,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     }
 }
 
-void podzol_init() {
+void podzol_init(void) {
     struct Block podzol = BLOCK_DEFAULT;
     podzol.id = PODZOL;
     podzol.get_texture_location = get_texture_location;

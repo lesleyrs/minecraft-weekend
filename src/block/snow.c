@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 3, 2 }};
 }
 
-void snow_init() {
+void snow_init(void) {
     struct Block snow = BLOCK_DEFAULT;
     snow.id = SNOW;
     snow.get_texture_location = get_texture_location;

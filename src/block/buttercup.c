@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 1, 3 }};
 }
 
-void buttercup_init() {
+void buttercup_init(void) {
     struct Block buttercup = BLOCK_DEFAULT;
     buttercup.id = BUTTERCUP;
     buttercup.transparent = true;

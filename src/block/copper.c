@@ -4,7 +4,7 @@ static ivec2s get_texture_location(struct World *world, ivec3s pos, enum Directi
     return (ivec2s) {{ 5, 0 }};
 }
 
-void copper_init() {
+void copper_init(void) {
     struct Block copper = BLOCK_DEFAULT;
     copper.id = COPPER;
     copper.get_texture_location = get_texture_location;
