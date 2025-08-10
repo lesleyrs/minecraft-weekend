@@ -242,7 +242,7 @@ void world_init(struct World *self) {
     self->unloaded_blocks.list = malloc(self->unloaded_blocks.capacity * sizeof(struct WorldUnloadedBlock));
 
 #ifdef __wasm
-    self->chunks_size = 4;
+    self->chunks_size = 8;
 #else
     self->chunks_size = 16;
 #endif
