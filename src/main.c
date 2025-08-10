@@ -66,31 +66,12 @@ void tick(void) {
     state.ticks++;
     world_tick(&state.world);
     ui_tick(&state.ui);
-
-    // time warp
-    if (state.window->keyboard.keys[GLFW_KEY_L].down) {
-        state.world.ticks += 30;
-    }
-
-    if (state.window->keyboard.keys[GLFW_KEY_P].pressed_tick) {
-        state.world.ticks += (TOTAL_DAY_TICKS) / 3;
-    }
 }
 
 void update(void) {
     renderer_update(&state.renderer);
     world_update(&state.world);
     ui_update(&state.ui);
-
-    // wireframe toggle (T)
-    if (state.window->keyboard.keys[GLFW_KEY_T].pressed) {
-        state.renderer.flags.wireframe = !state.renderer.flags.wireframe;
-    }
-
-    // mouse toggle (ESC)
-    if (state.window->keyboard.keys[GLFW_KEY_ESCAPE].pressed) {
-        mouse_set_grabbed(!mouse_get_grabbed());
-    }
 }
 
 void render(void) {

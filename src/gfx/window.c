@@ -1,10 +1,14 @@
+#ifndef __wasm
 #include "window.h"
+#include "../state.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 // global window
 struct Window window;
+
+GLFWwindow *handle;
 
 static void _size_callback(GLFWwindow *handle, int width, int height) {
     glViewport(0, 0, width, height);
@@ -78,25 +82,24 @@ void window_create(FWindow init, FWindow destroy, FWindow tick,  FWindow update,
 
     glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
 
     window.size = (ivec2s) {{1280, 720}};
-    window.handle = glfwCreateWindow(window.size.x, window.size.y, "Project", NULL, NULL);
-    if (window.handle == NULL) {
+    handle = glfwCreateWindow(window.size.x, window.size.y, "Project", NULL, NULL);
+    if (handle == NULL) {
         fprintf(stderr, "%s",  "error creating window\n");
         glfwTerminate();
         exit(1);
     }
 
-    glfwMakeContextCurrent(window.handle);
+    glfwMakeContextCurrent(handle);
 
     // configure callbacks
-    glfwSetFramebufferSizeCallback(window.handle, _size_callback);
-    glfwSetCursorPosCallback(window.handle, _cursor_callback);
-    glfwSetKeyCallback(window.handle, _key_callback);
-    glfwSetMouseButtonCallback(window.handle, _mouse_callback);
+    glfwSetFramebufferSizeCallback(handle, _size_callback);
+    glfwSetCursorPosCallback(handle, _cursor_callback);
+    glfwSetKeyCallback(handle, _key_callback);
+    glfwSetMouseButtonCallback(handle, _mouse_callback);
 
     if (!gladLoadGLES2(glfwGetProcAddress)) {
         fprintf(stderr, "%s",  "error initializing GLAD\n");
@@ -154,7 +157,7 @@ static void _render(void) {
 void window_loop(void) {
     _init();
 
-    while (!glfwWindowShouldClose(window.handle)) {
+    while (!glfwWindowShouldClose(handle)) {
         const u64 now = NOW();
 
         window.frame_delta = now - window.last_frame;
@@ -176,12 +179,33 @@ void window_loop(void) {
         while (tick_time > NS_PER_TICK) {
             _tick();
             tick_time -= NS_PER_TICK;
+
+            // time warp
+            if (state.window->keyboard.keys['['].down) {
+                state.world.ticks += 30;
+            }
+
+            if (state.window->keyboard.keys[']'].pressed_tick) {
+                state.world.ticks += (TOTAL_DAY_TICKS) / 3;
+            }
         }
         window.tick_remainder = max(tick_time, 0);
     
         _update();
+
+        // wireframe toggle (T)
+        // no longer working after desktop port to gles3
+        // if (state.window->keyboard.keys[GLFW_KEY_T].pressed) {
+        //     state.renderer.flags.wireframe = !state.renderer.flags.wireframe;
+        // }
+
+        // mouse toggle (ESC)
+        if (state.window->keyboard.keys[GLFW_KEY_ESCAPE].pressed) {
+            mouse_set_grabbed(!mouse_get_grabbed());
+        }
+
         _render();
-        glfwSwapBuffers(window.handle);
+        glfwSwapBuffers(handle);
         glfwPollEvents();
     }
 
@@ -190,9 +214,10 @@ void window_loop(void) {
 }
 
 void mouse_set_grabbed(bool grabbed) {
-    glfwSetInputMode(window.handle, GLFW_CURSOR, grabbed ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+    glfwSetInputMode(handle, GLFW_CURSOR, grabbed ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 }
 
 bool mouse_get_grabbed(void) {
-    return glfwGetInputMode(window.handle, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+    return glfwGetInputMode(handle, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
 }
+#endif

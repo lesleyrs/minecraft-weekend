@@ -1,2 +1,7 @@
+-std=c11
 -Ilib
 -D_GNU_SOURCE
+-D__STDC_WANT_LIB_EXT1__
+
+--target=wasm32
+--sysroot=../../wasmlite/libc

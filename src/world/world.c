@@ -241,7 +241,11 @@ void world_init(struct World *self) {
     self->unloaded_blocks.capacity = 64;
     self->unloaded_blocks.list = malloc(self->unloaded_blocks.capacity * sizeof(struct WorldUnloadedBlock));
 
+#ifdef __wasm
+    self->chunks_size = 4;
+#else
     self->chunks_size = 16;
+#endif
     self->chunks = calloc(1, NUM_CHUNKS(self) * sizeof(struct Chunk *));
     self->heightmaps = calloc(1, NUM_HEIGHTMAPS(self) * sizeof(struct Heightmap *));
 

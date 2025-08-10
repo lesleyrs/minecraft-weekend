@@ -9,6 +9,6 @@
 #define NOW() ({\
     struct timespec ts;\
     timespec_get(&ts, TIME_UTC);\
-    ((ts.tv_sec * NS_PER_SECOND) + ts.tv_nsec);})
+    (((uint64_t)ts.tv_sec * NS_PER_SECOND) + ts.tv_nsec);})
 
 #endif

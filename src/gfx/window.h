@@ -10,18 +10,17 @@ struct Button {
 
 
 struct Mouse {
-    struct Button buttons[GLFW_MOUSE_BUTTON_LAST];
+    struct Button buttons[INT8_MAX];
     vec2s position, delta;
 };
 
 struct Keyboard {
-    struct Button keys[GLFW_KEY_LAST];
+    struct Button keys[INT16_MAX];
 };
 
 typedef void (*FWindow)(void);
 
 struct Window {
-    GLFWwindow *handle;
     ivec2s size;
     FWindow init, destroy, tick, update, render;
     struct Mouse mouse;

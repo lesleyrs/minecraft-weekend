@@ -21,15 +21,15 @@ static void tick(struct ControlComponent *c_control, struct Entity entity) {
     struct BlockLookComponent *c_blocklook = ecs_get(entity, C_BLOCKLOOK);
     struct PhysicsComponent *c_physics = ecs_get(entity, C_PHYSICS);
     
-    c_movement->directions.forward = state.window->keyboard.keys[GLFW_KEY_W].down;
-    c_movement->directions.backward = state.window->keyboard.keys[GLFW_KEY_S].down;
-    c_movement->directions.left = state.window->keyboard.keys[GLFW_KEY_A].down;
-    c_movement->directions.right = state.window->keyboard.keys[GLFW_KEY_D].down;
-    
+    c_movement->directions.forward = state.window->keyboard.keys[GLFW_KEY_W].down || state.window->keyboard.keys[GLFW_KEY_I].down;
+    c_movement->directions.backward = state.window->keyboard.keys[GLFW_KEY_S].down || state.window->keyboard.keys[GLFW_KEY_K].down;
+    c_movement->directions.left = state.window->keyboard.keys[GLFW_KEY_A].down || state.window->keyboard.keys[GLFW_KEY_J].down;
+    c_movement->directions.right = state.window->keyboard.keys[GLFW_KEY_D].down || state.window->keyboard.keys[GLFW_KEY_L].down;
+
     c_movement->directions.up = state.window->keyboard.keys[GLFW_KEY_SPACE].down;
     c_movement->directions.down = state.window->keyboard.keys[GLFW_KEY_LEFT_SHIFT].down;
 
-    if (state.window->keyboard.keys[GLFW_KEY_K].pressed_tick) {
+    if (state.window->keyboard.keys[GLFW_KEY_F].pressed_tick) {
         c_movement->flags.flying = !c_movement->flags.flying;
     }
 
