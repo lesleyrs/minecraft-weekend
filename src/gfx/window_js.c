@@ -21,7 +21,7 @@ static void _pointerlock_callback(bool locked) {
 static bool _cursor_callback(void *userdata, int x, int y) {
     if (!g_locked) return 0;
 
-    window.mouse.delta = (vec2s){x, y};
+    window.mouse.delta = (vec2s){{x, y}};
     return 0;
 }
 
