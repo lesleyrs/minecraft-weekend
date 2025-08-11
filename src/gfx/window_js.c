@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include <js/glue.h>
 #include <js/gl3.h>
@@ -26,14 +27,14 @@ static bool _cursor_callback(void *userdata, int x, int y) {
 }
 
 static bool _key_callback(void *userdata, bool pressed, int key, int code, int modifiers) {
-    if (key < 0) return 0;
     // glfw mod values
     window.keyboard.keys[340].down = modifiers & KMOD_SHIFT;
     window.keyboard.keys[341].down = modifiers & KMOD_CTRL;
     window.keyboard.keys[342].down = modifiers & KMOD_ALT;
     window.keyboard.keys[343].down = modifiers & KMOD_META;
+    if (key < 0) return 0;
 
-    window.keyboard.keys[key].down = pressed;
+    window.keyboard.keys[tolower(key)].down = pressed;
     return 0;
 }
 
