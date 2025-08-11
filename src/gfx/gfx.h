@@ -7,7 +7,7 @@
 #include <gles2.h>
 #endif
 
-#ifdef __wasm32
+#ifdef __wasm
 #include <js/glue.h>
 #define GLFW_KEY_LEFT_SHIFT 340
 #define GLFW_MOUSE_BUTTON_LEFT MBTN_LEFT
