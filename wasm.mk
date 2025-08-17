@@ -5,7 +5,8 @@ CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter -Wno-gnu-statement-expression
 CFLAGS += -Wno-gnu-compound-literal-initializer -Wno-gnu-zero-variadic-macro-arguments
 CFLAGS += -Ilib -fbracket-depth=1024
-CFLAGS += -D__STDC_WANT_LIB_EXT1__ -Dcosf=cos -Dtanf=tan -Dpowf=pow -Datan2f=atan2 -Datanf=atan -Dasinf=asin -Dacosf=acos -Dsinf=sin -Dsqrtf=sqrt -Dfloorf=floor -Dfabsf=fabs -Dfminf=fmin -Dceilf=ceil -Dfmodf=fmod -Wno-macro-redefined -fno-builtin
+CFLAGS += -D__STDC_WANT_LIB_EXT1__ -Dcosf=cos -Dtanf=tan -Dpowf=pow -Datan2f=atan2 -Datanf=atan -Dasinf=asin -Dacosf=acos -Dsinf=sin -Dsqrtf=sqrt -Dfloorf=floor -Dfabsf=fabs -Dfminf=fmin -Dceilf=ceil -Dfmodf=fmod -Wno-macro-redefined
+CFLAGS += -fno-builtin-pow -fno-builtin-sin -fno-builtin-cos -fno-builtin-tan -fno-builtin-fmod
 LDFLAGS = -lm -Wl,--export-table -Wl,--stack-first -Wl,-z,stack-size=8388608
 
 DEBUG = 1
