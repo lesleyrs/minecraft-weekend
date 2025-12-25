@@ -1,4 +1,4 @@
-#ifdef __wasm
+#if defined(__wasm) && !defined(__EMSCRIPTEN__)
 #include "window.h"
 #include "../state.h"
 
@@ -38,12 +38,11 @@ static bool _key_callback(void *userdata, bool pressed, int key, int code, int m
     return 0;
 }
 
-static bool _mouse_callback(void *userdata, bool pressed, int button) {
-    if (button < 0) return 0;
+static void _mouse_callback(void *userdata, bool pressed, int button) {
+    if (button < 0) return;
 
     JS_requestPointerLock();
     window.mouse.buttons[button].down = pressed;
-    return 0;
 }
 
 void window_create(FWindow init, FWindow destroy, FWindow tick,  FWindow update, FWindow render) {
@@ -107,48 +106,53 @@ static void _render(void) {
     window.render();
 }
 
+static void mainloop(double dt) {
+    const u64 now = NOW();
+
+    window.frame_delta = now - window.last_frame;
+    window.last_frame = now;
+
+    if (now - window.last_second > NS_PER_SECOND) {
+        window.fps = window.frames;
+        window.tps = window.ticks;
+        window.frames = 0;
+        window.ticks = 0;
+        window.last_second = now;
+
+        printf("FPS: %llu | TPS: %llu\n", window.fps, window.tps);
+    }
+
+    // tick processing
+    const u64 NS_PER_TICK = (NS_PER_SECOND / 60);
+    u64 tick_time = window.frame_delta + window.tick_remainder;
+    // while (tick_time > NS_PER_TICK) {
+        _tick();
+
+        tick_time -= NS_PER_TICK;
+
+        // time warp
+        if (state.window->keyboard.keys['['].down) {
+            state.world.ticks += 30;
+        }
+
+        if (state.window->keyboard.keys[']'].pressed_tick) {
+            state.world.ticks += (TOTAL_DAY_TICKS) / 3;
+        }
+    // }
+    window.tick_remainder = max(tick_time, 0);
+
+    _update();
+    _render();
+}
+
 void window_loop(void) {
     _init();
 
-    while(1) {
-        const u64 now = NOW();
-
-        window.frame_delta = now - window.last_frame;
-        window.last_frame = now;
-
-        if (now - window.last_second > NS_PER_SECOND) {
-            window.fps = window.frames;
-            window.tps = window.ticks;
-            window.frames = 0;
-            window.ticks = 0;
-            window.last_second = now;
-
-            printf("FPS: %llu | TPS: %llu\n", window.fps, window.tps);
-        }
-
-        // tick processing
-        const u64 NS_PER_TICK = (NS_PER_SECOND / 60);
-        u64 tick_time = window.frame_delta + window.tick_remainder;
-        // while (tick_time > NS_PER_TICK) {
-            _tick();
-
-            tick_time -= NS_PER_TICK;
-
-            // time warp
-            if (state.window->keyboard.keys['['].down) {
-                state.world.ticks += 30;
-            }
-
-            if (state.window->keyboard.keys[']'].pressed_tick) {
-                state.world.ticks += (TOTAL_DAY_TICKS) / 3;
-            }
-        // }
-        window.tick_remainder = max(tick_time, 0);
-    
-        _update();
-        _render();
-        JS_requestAnimationFrame();
-    }
+    JS_setMainLoop(mainloop, 0);
+    // while(1) {
+    //     mainloop();
+    //     JS_requestAnimationFrame();
+    // }
 
     _destroy();
     exit(0);

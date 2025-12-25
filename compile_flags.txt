@@ -5,3 +5,6 @@
 
 --target=wasm32
 --sysroot=../../wasmlite/libc
+
+# --sysroot=../../../emsdk/upstream/emscripten/cache/sysroot
+# -D__EMSCRIPTEN__

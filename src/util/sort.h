@@ -22,7 +22,7 @@ static inline void sort_r(
     int (*cmp)(const void *a, const void *b, void *arg),
     void *arg
 ) {
-#ifdef __wasm
+#if !defined(__EMSCRIPTEN__) && defined(__wasm)
     qsort_s(base, nel, width, cmp, arg);
 #elif (defined _GNU_SOURCE || defined __GNU__ || defined __linux__)
     qsort_r(base, nel, width, cmp, arg);

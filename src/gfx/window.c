@@ -1,4 +1,7 @@
-#ifndef __wasm
+#if !defined(__wasm) || defined(__EMSCRIPTEN__)
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
 #include "window.h"
 #include "../state.h"
 
@@ -101,11 +104,13 @@ void window_create(FWindow init, FWindow destroy, FWindow tick,  FWindow update,
     glfwSetKeyCallback(handle, _key_callback);
     glfwSetMouseButtonCallback(handle, _mouse_callback);
 
+#ifndef __EMSCRIPTEN__
     if (!gladLoadGLES2(glfwGetProcAddress)) {
         fprintf(stderr, "%s",  "error initializing GLAD\n");
         glfwTerminate();
         exit(1);
     }
+#endif
 
     glfwSwapInterval(1);
 }
@@ -154,61 +159,68 @@ static void _render(void) {
     window.render();
 }
 
+static void mainloop(void) {
+    const u64 now = NOW();
+
+    window.frame_delta = now - window.last_frame;
+    window.last_frame = now;
+
+    if (now - window.last_second > NS_PER_SECOND) {
+        window.fps = window.frames;
+        window.tps = window.ticks;
+        window.frames = 0;
+        window.ticks = 0;
+        window.last_second = now;
+
+        printf("FPS: %lu | TPS: %lu\n", window.fps, window.tps);
+    }
+
+    // tick processing
+    const u64 NS_PER_TICK = (NS_PER_SECOND / 60);
+    u64 tick_time = window.frame_delta + window.tick_remainder;
+    while (tick_time > NS_PER_TICK) {
+        _tick();
+        tick_time -= NS_PER_TICK;
+
+        // time warp
+        if (state.window->keyboard.keys['['].down) {
+            state.world.ticks += 30;
+        }
+
+        if (state.window->keyboard.keys[']'].pressed_tick) {
+            state.world.ticks += (TOTAL_DAY_TICKS) / 3;
+        }
+    }
+    window.tick_remainder = max(tick_time, 0);
+
+    _update();
+
+    // wireframe toggle (T)
+    // no longer working after desktop port to gles3
+    // if (state.window->keyboard.keys[GLFW_KEY_T].pressed) {
+    //     state.renderer.flags.wireframe = !state.renderer.flags.wireframe;
+    // }
+
+    // mouse toggle (ESC)
+    if (state.window->keyboard.keys[GLFW_KEY_ESCAPE].pressed) {
+        mouse_set_grabbed(!mouse_get_grabbed());
+    }
+
+    _render();
+    glfwSwapBuffers(handle);
+    glfwPollEvents();
+}
+
 void window_loop(void) {
     _init();
 
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(mainloop, 0, true);
+#else
     while (!glfwWindowShouldClose(handle)) {
-        const u64 now = NOW();
-
-        window.frame_delta = now - window.last_frame;
-        window.last_frame = now;
-
-        if (now - window.last_second > NS_PER_SECOND) {
-            window.fps = window.frames;
-            window.tps = window.ticks;
-            window.frames = 0;
-            window.ticks = 0;
-            window.last_second = now;
-
-            printf("FPS: %lu | TPS: %lu\n", window.fps, window.tps);
-        }
-
-        // tick processing
-        const u64 NS_PER_TICK = (NS_PER_SECOND / 60);
-        u64 tick_time = window.frame_delta + window.tick_remainder;
-        while (tick_time > NS_PER_TICK) {
-            _tick();
-            tick_time -= NS_PER_TICK;
-
-            // time warp
-            if (state.window->keyboard.keys['['].down) {
-                state.world.ticks += 30;
-            }
-
-            if (state.window->keyboard.keys[']'].pressed_tick) {
-                state.world.ticks += (TOTAL_DAY_TICKS) / 3;
-            }
-        }
-        window.tick_remainder = max(tick_time, 0);
-    
-        _update();
-
-        // wireframe toggle (T)
-        // no longer working after desktop port to gles3
-        // if (state.window->keyboard.keys[GLFW_KEY_T].pressed) {
-        //     state.renderer.flags.wireframe = !state.renderer.flags.wireframe;
-        // }
-
-        // mouse toggle (ESC)
-        if (state.window->keyboard.keys[GLFW_KEY_ESCAPE].pressed) {
-            mouse_set_grabbed(!mouse_get_grabbed());
-        }
-
-        _render();
-        glfwSwapBuffers(handle);
-        glfwPollEvents();
+        mainloop();
     }
-
+#endif
     _destroy();
     exit(0);
 }

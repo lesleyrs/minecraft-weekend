@@ -1,13 +1,15 @@
 #ifndef GFX_H
 #define GFX_H
 
-#ifdef __wasm
+#ifdef __EMSCRIPTEN__
+#include <GLES3/gl3.h>
+#elif __wasm
 #include <js/gl3.h>
 #else
 #include <gles2.h>
 #endif
 
-#ifdef __wasm
+#if defined(__wasm) && !defined(__EMSCRIPTEN__)
 #include <js/glue.h>
 #define GLFW_KEY_LEFT_SHIFT 340
 #define GLFW_MOUSE_BUTTON_LEFT MBTN_LEFT

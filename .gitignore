@@ -1,6 +1,8 @@
 bin/game
 /*.wasm
 /*.html
+/*.js
+/*.data
 
 *.icloud
 .DS_Store
