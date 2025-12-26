@@ -38,7 +38,7 @@ run: all
 $(GAME): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS) $(LDFLAGS)
 ifeq ($(DEBUG),0)
-	wasm-strip $@ && wasm-opt $@ -o $@ -O3 --enable-sign-ext --enable-simd
+	wasm-strip $@ && wasm-opt $@ -o $@ -O4 --enable-sign-ext --enable-simd
 else
 	../../tools/emscripten/tools/wasm-sourcemap.py $@ -w $@ -p $(CURDIR) -s -u ./$@.map -o $@.map --dwarfdump=../../../emsdk/upstream/bin/llvm-dwarfdump
 	# ../../tools/emscripten/tools/wasm-sourcemap.py $@ -w $@ -p $(CURDIR) -s -u ./$@.map -o $@.map --dwarfdump=/usr/bin/llvm-dwarfdump
