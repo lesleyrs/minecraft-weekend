@@ -1,14 +1,6 @@
 #ifndef AABB_H
 #define AABB_H
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-braces"
-
-#include <cglm/cglm.h>
-#include <cglm/struct.h>
-
-#pragma GCC diagnostic pop
-
 #include "types.h"
 #include "fmath.h"
 

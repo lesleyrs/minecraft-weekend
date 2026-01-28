@@ -1,13 +1,12 @@
 UNAME_S = $(shell uname -s)
 
-CC = clang --target=wasm32 --sysroot=../../wasmlite/libc -nodefaultlibs
+CC = clang --target=wasm32 --sysroot=../../wasmlite/libc -nodefaultlibs -msimd128
 CFLAGS = -std=c11 -Wall -Wextra -Wpedantic -Wstrict-aliasing
 CFLAGS += -Wno-pointer-arith -Wno-newline-eof -Wno-unused-parameter -Wno-gnu-statement-expression
 CFLAGS += -Wno-gnu-compound-literal-initializer -Wno-gnu-zero-variadic-macro-arguments
 CFLAGS += -Ilib -fbracket-depth=1024
 CFLAGS += -D__STDC_WANT_LIB_EXT1__
-CFLAGS += -fno-builtin-pow -fno-builtin-sin -fno-builtin-cos -fno-builtin-tan -fno-builtin-fmod -fno-builtin-fmodf -fno-builtin-cosf -fno-builtin-sinf -fno-builtin-powf -fno-builtin-tanf
-LDFLAGS = -lm -Wl,--export-table -Wl,--stack-first -Wl,-z,stack-size=8388608 -msimd128
+LDFLAGS = -Wl,--export-table -Wl,--stack-first -Wl,-z,stack-size=8388608
 
 DEBUG = 1
 

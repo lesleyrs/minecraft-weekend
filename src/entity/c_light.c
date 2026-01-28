@@ -6,7 +6,7 @@
 static void tick(struct LightComponent *c_light, struct Entity entity) {
     struct PositionComponent *c_position = ecs_get(entity, C_POSITION);
 
-    bool changed = ivec3scmp(c_position->block, c_light->last.pos) ||
+    bool changed = !glms_ivec3_eqv(c_position->block, c_light->last.pos) ||
         c_light->flags.enabled != c_light->last.enabled;
 
     if (changed) {

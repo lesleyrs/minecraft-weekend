@@ -80,6 +80,14 @@ CGLM_EXPORT
 float
 glmc_mat3_rmc(vec3 r, mat3 m, vec3 c);
 
+CGLM_EXPORT
+void
+glmc_mat3_make(const float * __restrict src, mat3 dest);
+
+CGLM_EXPORT
+void
+glmc_mat3_textrans(float sx, float sy, float rot, float tx, float ty, mat3 dest);
+
 #ifdef __cplusplus
 }
 #endif

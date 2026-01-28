@@ -25,9 +25,22 @@
       * only #define governing the use of anonymous structs, so for backward
       * compatibility, we still honor that choice and disable them. */
 #    define CGLM_USE_ANONYMOUS_STRUCT 0
-#  elif __STDC_VERSION__ >= 20112L || defined(_MSVC_VER)
+     /* Disable anonymous structs if strict ANSI mode is enabled for C89 or C99 */
+#  elif defined(__STRICT_ANSI__) && \
+        (!defined(__STDC_VERSION__) || (__STDC_VERSION__ < 201112L))
+     /* __STRICT_ANSI__ is defined and we're in C89
+      * or C99 mode (C11 or later not detected) */
+#    define CGLM_USE_ANONYMOUS_STRUCT 0
+#  elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || \
+        (defined(__cplusplus)      && __cplusplus >= 201103L)
      /* We're compiling for C11 or this is the MSVC compiler. In either
       * case, anonymous structs are available, so use them. */
+#    define CGLM_USE_ANONYMOUS_STRUCT 1
+#  elif defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+     /* GCC 4.6 and onwards support anonymous structs as an extension */
+#    define CGLM_USE_ANONYMOUS_STRUCT 1
+#  elif defined(__clang__) && __clang_major__ >= 3
+     /* Clang 3.0 and onwards support anonymous structs as an extension */
 #    define CGLM_USE_ANONYMOUS_STRUCT 1
 #  elif defined(_MSC_VER) && (_MSC_VER >= 1900) /*  Visual Studio 2015 */
      /* We can support anonymous structs
@@ -47,6 +60,21 @@ typedef union vec2s {
     float x;
     float y;
   };
+  
+  struct {
+    float r;
+    float i;
+  };
+  
+  struct {
+    float u;
+    float v;
+  };
+  
+  struct {
+    float s;
+    float t;
+  };
 #endif
 } vec2s;
 
@@ -58,8 +86,39 @@ typedef union vec3s {
     float y;
     float z;
   };
+  
+  struct {
+    float r;
+    float g;
+    float b;
+  };
 #endif
 } vec3s;
+
+typedef union ivec2s {
+  ivec2 raw;
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    int x;
+    int y;
+  };
+  
+  struct {
+    int r;
+    int i;
+  };
+  
+  struct {
+    int u;
+    int v;
+  };
+  
+  struct {
+    int s;
+    int t;
+  };
+#endif
+} ivec2s;
 
 typedef union ivec3s {
   ivec3 raw;
@@ -69,8 +128,33 @@ typedef union ivec3s {
     int y;
     int z;
   };
+  
+  struct {
+    int r;
+    int g;
+    int b;
+  };
 #endif
 } ivec3s;
+
+typedef union ivec4s {
+  ivec4 raw;
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    int x;
+    int y;
+    int z;
+    int w;
+  };
+  
+  struct {
+    int r;
+    int g;
+    int b;
+    int a;
+  };
+#endif
+} ivec4s;
 
 typedef union CGLM_ALIGN_IF(16) vec4s {
   vec4 raw;
@@ -80,6 +164,13 @@ typedef union CGLM_ALIGN_IF(16) vec4s {
     float y;
     float z;
     float w;
+  };
+  
+  struct {
+    float r;
+    float g;
+    float b;
+    float a;
   };
 #endif
 } vec4s;
@@ -112,6 +203,28 @@ typedef union mat2s {
 #endif
 } mat2s;
 
+typedef union mat2x3s {
+  mat2x3 raw;
+  vec3s  col[2]; /* [col (2), row (3)] */
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    float m00, m01, m02;
+    float m10, m11, m12;
+  };
+#endif
+} mat2x3s;
+
+typedef union mat2x4s {
+  mat2x4 raw;
+  vec4s  col[2]; /* [col (2), row (4)] */
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    float m00, m01, m02, m03;
+    float m10, m11, m12, m13;
+  };
+#endif
+} mat2x4s;
+
 typedef union mat3s {
   mat3  raw;
   vec3s col[3];
@@ -123,6 +236,30 @@ typedef union mat3s {
   };
 #endif
 } mat3s;
+
+typedef union mat3x2s {
+  mat3x2 raw;
+  vec2s  col[3]; /* [col (3), row (2)] */
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    float m00, m01;
+    float m10, m11;
+    float m20, m21;
+  };
+#endif
+} mat3x2s;
+
+typedef union mat3x4s {
+  mat3x4 raw;
+  vec4s  col[3]; /* [col (3), row (4)] */
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    float m00, m01, m02, m03;
+    float m10, m11, m12, m13;
+    float m20, m21, m22, m23;
+  };
+#endif
+} mat3x4s;
 
 typedef union CGLM_ALIGN_MAT mat4s {
   mat4  raw;
@@ -136,5 +273,31 @@ typedef union CGLM_ALIGN_MAT mat4s {
   };
 #endif
 } mat4s;
+
+typedef union mat4x2s {
+  mat4x2 raw;
+  vec2s  col[4]; /* [col (4), row (2)] */
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    float m00, m01;
+    float m10, m11;
+    float m20, m21;
+    float m30, m31;
+  };
+#endif
+} mat4x2s;
+
+typedef union mat4x3s {
+  mat4x3 raw;
+  vec3s  col[4]; /* [col (4), row (3)] */
+#if CGLM_USE_ANONYMOUS_STRUCT
+  struct {
+    float m00, m01, m02;
+    float m10, m11, m12;
+    float m20, m21, m22;
+    float m30, m31, m32;
+  };
+#endif
+} mat4x3s;
 
 #endif /* cglm_types_struct_h */

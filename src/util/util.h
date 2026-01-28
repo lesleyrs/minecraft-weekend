@@ -16,15 +16,11 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmissing-braces"
 
-#include <cglm/cglm.h>
+#define GLM_TESTS_NO_COLORFUL_OUTPUT
 #include <cglm/struct.h>
 
 #pragma GCC diagnostic pop
 
-#include "ivec2.h"
-#include "ivec2s.h"
-#include "ivec3.h"
-#include "ivec3s.h"
 #include "aabb.h"
 
 #include "fmath.h"

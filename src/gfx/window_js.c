@@ -12,8 +12,6 @@
 // global window
 struct Window window;
 
-void __unordtf2() {}
-
 static bool g_locked = false;
 
 static void _pointerlock_callback(bool locked) {

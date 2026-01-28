@@ -134,7 +134,7 @@ void chunk_update(struct Chunk *self) {
     bool within_distance = glms_ivec3_norm(glms_ivec3_sub(self->offset, c_position->offset)) < 4;
 
     self->mesh->flags.depth_sort =
-        (!ivec3scmp(self->offset, c_position->offset) && c_position->block_changed) ||
+        (glms_ivec3_eqv(self->offset, c_position->offset) && c_position->block_changed) ||
         (c_position->offset_changed && within_distance);
 
     // Persist depth sort data if the player is within depth sort distance of this chunk

@@ -22,7 +22,7 @@ const vec3s DIRECTION_VEC[6] = {
 
 enum Direction _ivec3s2dir(ivec3s v) {
     for (size_t i = 0; i < 6; i++) {
-        if (!memcmp(&DIR2IVEC3S(i), &v, sizeof(ivec3s))) {
+        if (glms_ivec3_eqv(DIR2IVEC3S(i), v)) {
             return i;
         }
     }

@@ -213,7 +213,7 @@ void world_load_chunk(struct World *self, ivec3s offset) {
     // set blocks which were previously unloaded
     for (size_t i = 0; i < self->unloaded_blocks.size; i++) {
         struct WorldUnloadedBlock data = self->unloaded_blocks.list[i];
-        if (!ivec3scmp(chunk->offset, world_pos_to_offset(data.pos))) {
+        if (glms_ivec3_eqv(chunk->offset, world_pos_to_offset(data.pos))) {
             chunk_set_block(chunk, world_pos_to_chunk_pos(data.pos), data.block);
             world_remove_unloaded_block(self, i);
         }
@@ -312,7 +312,7 @@ void world_set_center(struct World *self, ivec3s center_pos) {
         (self->chunks_size / 2)
     }});
 
-    if (!ivec3scmp(new_origin, self->chunks_origin)) {
+    if (glms_ivec3_eqv(new_origin, self->chunks_origin)) {
         // Do nothing if the center chunk hasn't moved
         return;
     }

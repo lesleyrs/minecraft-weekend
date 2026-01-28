@@ -11,6 +11,7 @@
 struct State state;
 
 void init(void) {
+    glm_arch_print_name(stdout);
     block_init();
     state.window = &window;
     renderer_init(&state.renderer);

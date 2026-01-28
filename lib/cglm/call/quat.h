@@ -38,6 +38,10 @@ void
 glmc_quat_copy(versor q, versor dest);
 
 CGLM_EXPORT
+void
+glmc_quat_from_vecs(vec3 a, vec3 b, versor dest);
+
+CGLM_EXPORT
 float
 glmc_quat_norm(versor q);
 
@@ -116,14 +120,22 @@ glmc_quat_mat3t(versor q, mat3 dest);
 CGLM_EXPORT
 void
 glmc_quat_lerp(versor from, versor to, float t, versor dest);
-    
+
 CGLM_EXPORT
 void
 glmc_quat_lerpc(versor from, versor to, float t, versor dest);
 
 CGLM_EXPORT
 void
+glmc_quat_nlerp(versor q, versor r, float t, versor dest);
+
+CGLM_EXPORT
+void
 glmc_quat_slerp(versor q, versor r, float t, versor dest);
+
+CGLM_EXPORT
+void
+glmc_quat_slerp_longest(versor q, versor r, float t, versor dest);
 
 CGLM_EXPORT
 void
@@ -152,6 +164,10 @@ glmc_quat_rotate_at(mat4 model, versor q, vec3 pivot);
 CGLM_EXPORT
 void
 glmc_quat_rotate_atm(mat4 m, versor q, vec3 pivot);
+
+CGLM_EXPORT
+void
+glmc_quat_make(const float * __restrict src, versor dest);
 
 #ifdef __cplusplus
 }

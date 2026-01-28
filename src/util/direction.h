@@ -1,13 +1,7 @@
 #ifndef DIRECTION_H
 #define DIRECTION_H
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmissing-braces"
-
-#include <cglm/cglm.h>
-#include <cglm/struct.h>
-
-#pragma GCC diagnostic pop
+#include "util.h"
 
 enum Direction {
     NORTH = 0,

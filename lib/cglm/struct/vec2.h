@@ -37,15 +37,26 @@
    CGLM_INLINE vec2s glms_vec2_muladds(vec2s a, float s, vec2s dest)
    CGLM_INLINE vec2s glms_vec2_maxadd(vec2s a, vec2s b, vec2s dest)
    CGLM_INLINE vec2s glms_vec2_minadd(vec2s a, vec2s b, vec2s dest)
+   CGLM_INLINE vec2s glms_vec2_subsub(vec2s a, vec2s b, vec2s dest)
+   CGLM_INLINE vec2s glms_vec2_addsub(vec2s a, vec2s b, vec2s dest)
+   CGLM_INLINE vec2s glms_vec2_mulsub(vec2s a, vec2s b, vec2s dest)
+   CGLM_INLINE vec2s glms_vec2_mulsubs(vec2s a, float s, vec2s dest)
+   CGLM_INLINE vec2s glms_vec2_maxsub(vec2s a, vec2s b, vec2s dest)
+   CGLM_INLINE vec2s glms_vec2_minsub(vec2s a, vec2s b, vec2s dest)
    CGLM_INLINE vec2s glms_vec2_negate(vec2s v)
    CGLM_INLINE vec2s glms_vec2_normalize(vec2s v)
    CGLM_INLINE vec2s glms_vec2_rotate(vec2s v, float angle, vec2s axis)
+   CGLM_INLINE vec2s glms_vec2_center(vec2s a, vec2s b)
    CGLM_INLINE float glms_vec2_distance(vec2s a, vec2s b)
    CGLM_INLINE float glms_vec2_distance2(vec2s a, vec2s b)
    CGLM_INLINE vec2s glms_vec2_maxv(vec2s a, vec2s b)
    CGLM_INLINE vec2s glms_vec2_minv(vec2s a, vec2s b)
    CGLM_INLINE vec2s glms_vec2_clamp(vec2s v, float minVal, float maxVal)
    CGLM_INLINE vec2s glms_vec2_lerp(vec2s from, vec2s to, float t)
+   CGLM_INLINE vec2s glms_vec2_step(vec2s edge, vec2s x)
+   CGLM_INLINE vec2s glms_vec2_make(float * restrict src)
+   CGLM_INLINE vec2s glms_vec2_reflect(vec2s v, vec2s n)
+   CGLM_INLINE bool  glms_vec2_refract(vec2s v, vec2s n, float eta, vec2s *dest)
  */
 
 #ifndef cglms_vec2s_h
@@ -86,7 +97,7 @@ glms_vec2(vec3s v3) {
  */
 CGLM_INLINE
 void
-glms_vec2_pack(vec2s dst[], vec2 src[], size_t len) {
+glms_vec2_(pack)(vec2s dst[], vec2 src[], size_t len) {
   size_t i;
 
   for (i = 0; i < len; i++) {
@@ -103,7 +114,7 @@ glms_vec2_pack(vec2s dst[], vec2 src[], size_t len) {
  */
 CGLM_INLINE
 void
-glms_vec2_unpack(vec2 dst[], vec2s src[], size_t len) {
+glms_vec2_(unpack)(vec2 dst[], vec2s src[], size_t len) {
   size_t i;
 
   for (i = 0; i < len; i++) {
@@ -118,7 +129,7 @@ glms_vec2_unpack(vec2 dst[], vec2s src[], size_t len) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_zero(void) {
+glms_vec2_(zero)(void) {
   vec2s r;
   glm_vec2_zero(r.raw);
   return r;
@@ -131,7 +142,7 @@ glms_vec2_zero(void) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_one(void) {
+glms_vec2_(one)(void) {
   vec2s r;
   glm_vec2_one(r.raw);
   return r;
@@ -147,7 +158,7 @@ glms_vec2_one(void) {
  */
 CGLM_INLINE
 float
-glms_vec2_dot(vec2s a, vec2s b) {
+glms_vec2_(dot)(vec2s a, vec2s b) {
   return glm_vec2_dot(a.raw, b.raw);
 }
 
@@ -163,7 +174,7 @@ glms_vec2_dot(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 float
-glms_vec2_cross(vec2s a, vec2s b) {
+glms_vec2_(cross)(vec2s a, vec2s b) {
   return glm_vec2_cross(a.raw, b.raw);
 }
 
@@ -171,7 +182,7 @@ glms_vec2_cross(vec2s a, vec2s b) {
  * @brief norm * norm (magnitude) of vec
  *
  * we can use this func instead of calling norm * norm, because it would call
- * sqrtf fuction twice but with this func we can avoid func call, maybe this is
+ * sqrtf function twice but with this func we can avoid func call, maybe this is
  * not good name for this func
  *
  * @param[in] v vector
@@ -180,7 +191,7 @@ glms_vec2_cross(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 float
-glms_vec2_norm2(vec2s v) {
+glms_vec2_(norm2)(vec2s v) {
   return glm_vec2_norm2(v.raw);
 }
 
@@ -193,7 +204,7 @@ glms_vec2_norm2(vec2s v) {
  */
 CGLM_INLINE
 float
-glms_vec2_norm(vec2s v) {
+glms_vec2_(norm)(vec2s v) {
   return glm_vec2_norm(v.raw);
 }
 
@@ -206,7 +217,7 @@ glms_vec2_norm(vec2s v) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_add(vec2s a, vec2s b) {
+glms_vec2_(add)(vec2s a, vec2s b) {
   vec2s r;
   glm_vec2_add(a.raw, b.raw, r.raw);
   return r;
@@ -221,7 +232,7 @@ glms_vec2_add(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_adds(vec2s a, float s) {
+glms_vec2_(adds)(vec2s a, float s) {
   vec2s r;
   glm_vec2_adds(a.raw, s, r.raw);
   return r;
@@ -236,7 +247,7 @@ glms_vec2_adds(vec2s a, float s) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_sub(vec2s a, vec2s b) {
+glms_vec2_(sub)(vec2s a, vec2s b) {
   vec2s r;
   glm_vec2_sub(a.raw, b.raw, r.raw);
   return r;
@@ -251,22 +262,22 @@ glms_vec2_sub(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_subs(vec2s a, float s) {
+glms_vec2_(subs)(vec2s a, float s) {
   vec2s r;
   glm_vec2_subs(a.raw, s, r.raw);
   return r;
 }
 
 /*!
- * @brief multiply two vector (component-wise multiplication)
+ * @brief multiply two vectors (component-wise multiplication)
  *
  * @param     a     vector1
  * @param     b     vector2
- * @returns         v3 = (a[0] * b[0], a[1] * b[1], a[2] * b[2])
+ * @returns         result = (a[0] * b[0], a[1] * b[1])
  */
 CGLM_INLINE
 vec2s
-glms_vec2_mul(vec2s a, vec2s b) {
+glms_vec2_(mul)(vec2s a, vec2s b) {
   vec2s r;
   glm_vec2_mul(a.raw, b.raw, r.raw);
   return r;
@@ -281,7 +292,7 @@ glms_vec2_mul(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_scale(vec2s v, float s) {
+glms_vec2_(scale)(vec2s v, float s) {
   vec2s r;
   glm_vec2_scale(v.raw, s, r.raw);
   return r;
@@ -296,7 +307,7 @@ glms_vec2_scale(vec2s v, float s) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_scale_as(vec2s v, float s) {
+glms_vec2_(scale_as)(vec2s v, float s) {
   vec2s r;
   glm_vec2_scale_as(v.raw, s, r.raw);
   return r;
@@ -307,11 +318,11 @@ glms_vec2_scale_as(vec2s v, float s) {
  *
  * @param[in]  a    vector 1
  * @param[in]  b    vector 2
- * @returns         result = (a[0]/b[0], a[1]/b[1], a[2]/b[2])
+ * @returns         result = (a[0]/b[0], a[1]/b[1])
  */
 CGLM_INLINE
 vec2s
-glms_vec2_div(vec2s a, vec2s b) {
+glms_vec2_(div)(vec2s a, vec2s b) {
   vec2s r;
   glm_vec2_div(a.raw, b.raw, r.raw);
   return r;
@@ -322,11 +333,11 @@ glms_vec2_div(vec2s a, vec2s b) {
  *
  * @param[in]  a    vector
  * @param[in]  s    scalar
- * @returns         result = (a[0]/s, a[1]/s, a[2]/s)
+ * @returns         result = (a[0]/s, a[1]/s)
  */
 CGLM_INLINE
 vec2s
-glms_vec2_divs(vec2s a, float s) {
+glms_vec2_(divs)(vec2s a, float s) {
   vec2s r;
   glm_vec2_divs(a.raw, s, r.raw);
   return r;
@@ -343,7 +354,7 @@ glms_vec2_divs(vec2s a, float s) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_addadd(vec2s a, vec2s b, vec2s dest) {
+glms_vec2_(addadd)(vec2s a, vec2s b, vec2s dest) {
   glm_vec2_addadd(a.raw, b.raw, dest.raw);
   return dest;
 }
@@ -359,7 +370,7 @@ glms_vec2_addadd(vec2s a, vec2s b, vec2s dest) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_subadd(vec2s a, vec2s b, vec2s dest) {
+glms_vec2_(subadd)(vec2s a, vec2s b, vec2s dest) {
   glm_vec2_subadd(a.raw, b.raw, dest.raw);
   return dest;
 }
@@ -375,7 +386,7 @@ glms_vec2_subadd(vec2s a, vec2s b, vec2s dest) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_muladd(vec2s a, vec2s b, vec2s dest) {
+glms_vec2_(muladd)(vec2s a, vec2s b, vec2s dest) {
   glm_vec2_muladd(a.raw, b.raw, dest.raw);
   return dest;
 }
@@ -391,13 +402,13 @@ glms_vec2_muladd(vec2s a, vec2s b, vec2s dest) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_muladds(vec2s a, float s, vec2s dest) {
+glms_vec2_(muladds)(vec2s a, float s, vec2s dest) {
   glm_vec2_muladds(a.raw, s, dest.raw);
   return dest;
 }
 
 /*!
- * @brief add max of two vector to result/dest
+ * @brief add max of two vectors to result/dest
  *
  * it applies += operator so dest must be initialized
  *
@@ -407,13 +418,13 @@ glms_vec2_muladds(vec2s a, float s, vec2s dest) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_maxadd(vec2s a, vec2s b, vec2s dest) {
+glms_vec2_(maxadd)(vec2s a, vec2s b, vec2s dest) {
   glm_vec2_maxadd(a.raw, b.raw, dest.raw);
   return dest;
 }
 
 /*!
- * @brief add min of two vector to result/dest
+ * @brief add min of two vectors to result/dest
  *
  * it applies += operator so dest must be initialized
  *
@@ -423,8 +434,104 @@ glms_vec2_maxadd(vec2s a, vec2s b, vec2s dest) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_minadd(vec2s a, vec2s b, vec2s dest) {
+glms_vec2_(minadd)(vec2s a, vec2s b, vec2s dest) {
   glm_vec2_minadd(a.raw, b.raw, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief sub two vectors and sub result to dest
+ *
+ * it applies -= operator so dest must be initialized
+ *
+ * @param[in]  a    vector 1
+ * @param[in]  b    vector 2
+ * @returns         dest -= (a - b)
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(subsub)(vec2s a, vec2s b, vec2s dest) {
+  glm_vec2_subsub(a.raw, b.raw, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief add two vectors and sub result to dest
+ *
+ * it applies -= operator so dest must be initialized
+ *
+ * @param[in]  a    vector 1
+ * @param[in]  b    vector 2
+ * @returns         dest -= (a + b)
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(addsub)(vec2s a, vec2s b, vec2s dest) {
+  glm_vec2_addsub(a.raw, b.raw, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief mul two vectors and sub result to dest
+ *
+ * it applies -= operator so dest must be initialized
+ *
+ * @param[in]  a    vector 1
+ * @param[in]  b    vector 2
+ * @returns         dest -= (a * b)
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(mulsub)(vec2s a, vec2s b, vec2s dest) {
+  glm_vec2_mulsub(a.raw, b.raw, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief mul vector with scalar and sub result to dest
+ *
+ * it applies -= operator so dest must be initialized
+ *
+ * @param[in]  a    vector
+ * @param[in]  s    scalar
+ * @returns         dest -= (a * b)
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(mulsubs)(vec2s a, float s, vec2s dest) {
+  glm_vec2_mulsubs(a.raw, s, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief sub max of two vectors to dest
+ *
+ * it applies += operator so dest must be initialized
+ *
+ * @param[in]  a    vector 1
+ * @param[in]  b    vector 2
+ * @returns         dest -= max(a, b)
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(maxsub)(vec2s a, vec2s b, vec2s dest) {
+  glm_vec2_maxsub(a.raw, b.raw, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief sub min of two vectors to dest
+ *
+ * it applies -= operator so dest must be initialized
+ *
+ * @param[in]  a    vector 1
+ * @param[in]  b    vector 2
+ * @returns         dest -= min(a, b)
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(minsub)(vec2s a, vec2s b, vec2s dest) {
+  glm_vec2_minsub(a.raw, b.raw, dest.raw);
   return dest;
 }
 
@@ -436,7 +543,7 @@ glms_vec2_minadd(vec2s a, vec2s b, vec2s dest) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_negate(vec2s v) {
+glms_vec2_(negate)(vec2s v) {
   glm_vec2_negate(v.raw);
   return v;
 }
@@ -449,7 +556,7 @@ glms_vec2_negate(vec2s v) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_normalize(vec2s v) {
+glms_vec2_(normalize)(vec2s v) {
   glm_vec2_normalize(v.raw);
   return v;
 }
@@ -463,9 +570,24 @@ glms_vec2_normalize(vec2s v) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_rotate(vec2s v, float angle) {
+glms_vec2_(rotate)(vec2s v, float angle) {
   vec2s r;
   glm_vec2_rotate(v.raw, angle, r.raw);
+  return r;
+}
+
+/**
+ * @brief find center point of two vector
+ *
+ * @param[in]  a    vector1
+ * @param[in]  b    vector2
+ * @returns         center point
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(center)(vec2s a, vec2s b) {
+  vec2s r;
+  glm_vec2_center(a.raw, b.raw, r.raw);
   return r;
 }
 
@@ -478,7 +600,7 @@ glms_vec2_rotate(vec2s v, float angle) {
  */
 CGLM_INLINE
 float
-glms_vec2_distance(vec2s a, vec2s b) {
+glms_vec2_(distance)(vec2s a, vec2s b) {
   return glm_vec2_distance(a.raw, b.raw);
 }
 
@@ -491,7 +613,7 @@ glms_vec2_distance(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 float
-glms_vec2_distance2(vec2s a, vec2s b) {
+glms_vec2_(distance2)(vec2s a, vec2s b) {
   return glm_vec2_distance2(a.raw, b.raw);
 }
 
@@ -504,7 +626,7 @@ glms_vec2_distance2(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_maxv(vec2s a, vec2s b) {
+glms_vec2_(maxv)(vec2s a, vec2s b) {
   vec2s r;
   glm_vec2_maxv(a.raw, b.raw, r.raw);
   return r;
@@ -519,7 +641,7 @@ glms_vec2_maxv(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_minv(vec2s a, vec2s b) {
+glms_vec2_(minv)(vec2s a, vec2s b) {
   vec2s r;
   glm_vec2_minv(a.raw, b.raw, r.raw);
   return r;
@@ -535,7 +657,7 @@ glms_vec2_minv(vec2s a, vec2s b) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_clamp(vec2s v, float minVal, float maxVal) {
+glms_vec2_(clamp)(vec2s v, float minVal, float maxVal) {
   glm_vec2_clamp(v.raw, minVal, maxVal);
   return v;
 }
@@ -552,10 +674,74 @@ glms_vec2_clamp(vec2s v, float minVal, float maxVal) {
  */
 CGLM_INLINE
 vec2s
-glms_vec2_lerp(vec2s from, vec2s to, float t) {
+glms_vec2_(lerp)(vec2s from, vec2s to, float t) {
   vec2s r;
   glm_vec2_lerp(from.raw, to.raw, t, r.raw);
   return r;
+}
+
+/*!
+ * @brief threshold function
+ *
+ * @param[in]   edge    threshold
+ * @param[in]   x       value to test against threshold
+ * @returns             destination
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(step)(vec2s edge, vec2s x) {
+  vec2s r;
+  glm_vec2_step(edge.raw, x.raw, r.raw);
+  return r;
+}
+
+/*!
+ * @brief Create two dimensional vector from pointer
+ *
+ * @param[in]  src  pointer to an array of floats
+ * @returns constructed 2D vector from raw pointer
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(make)(const float * __restrict src) {
+  vec2s dest;
+  glm_vec2_make(src, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief reflection vector using an incident ray and a surface normal
+ *
+ * @param[in]  I    incident vector
+ * @param[in]  N    normalized normal vector
+ * @returns reflection result
+ */
+CGLM_INLINE
+vec2s
+glms_vec2_(reflect)(vec2s v, vec2s n) {
+  vec2s dest;
+  glm_vec2_reflect(v.raw, n.raw, dest.raw);
+  return dest;
+}
+
+/*!
+ * @brief computes refraction vector for an incident vector and a surface normal.
+ *
+ * calculates the refraction vector based on Snell's law. If total internal reflection
+ * occurs (angle too great given eta), dest is set to zero and returns false.
+ * Otherwise, computes refraction vector, stores it in dest, and returns true.
+ *
+ * @param[in]  v    normalized incident vector
+ * @param[in]  n    normalized normal vector
+ * @param[in]  eta  ratio of indices of refraction (incident/transmitted)
+ * @param[out] dest refraction vector if refraction occurs; zero vector otherwise
+ *
+ * @returns true if refraction occurs; false if total internal reflection occurs.
+ */
+CGLM_INLINE
+bool
+glms_vec2_(refract)(vec2s v, vec2s n, float eta, vec2s * __restrict dest) {
+  return glm_vec2_refract(v.raw, n.raw, eta, dest->raw);
 }
 
 #endif /* cglms_vec2s_h */

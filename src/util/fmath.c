@@ -1,10 +1,6 @@
 #include "fmath.h"
 #include "../util/util.h"
 
-int ivec3scmp(ivec3s a, ivec3s b) {
-    return memcmp(&a, &b, sizeof(ivec3s));
-}
-
 s64 ivec3shash(ivec3s v) {
     s64 h = 0;
     for(int i = 0; i < 3; i++) {
