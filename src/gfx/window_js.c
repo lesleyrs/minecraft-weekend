@@ -14,6 +14,11 @@ struct Window window;
 
 static bool g_locked = false;
 
+static void _size_callback(void *userdata, int width, int height) {
+    glViewport(0, 0, width, height);
+    window.size = (ivec2s) {{width, height}};
+}
+
 static void _pointerlock_callback(bool locked) {
     g_locked = locked;
 }
@@ -59,6 +64,7 @@ void window_create(FWindow init, FWindow destroy, FWindow tick,  FWindow update,
     JS_addMouseEventListener(NULL, _mouse_callback, _cursor_callback, NULL);
     JS_addKeyEventListener(NULL, _key_callback);
     JS_addPointerLockChangeEventListener(_pointerlock_callback);
+    JS_addResizeEventListener(NULL, window.size.x, window.size.y, _size_callback);
 }
 
 static void button_array_tick(size_t n, struct Button *buttons) {
